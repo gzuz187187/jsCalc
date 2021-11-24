@@ -17,58 +17,91 @@ class Calculator {
   }
 
   appendNumber(number) {
-    this.currentOperand = number;
-    // console.log(`appendNumber currentOperand: ${this.currentOperand}`);
-    // this.currentOperandTextElement.innerText = 187;
+    if (number == "." && this.currentOperand.includes(".")) {
+      return;
+    }
+    this.currentOperand = this.currentOperand.toString() + number.toString();
   }
 
   chooseOperation(operation) {
-    undefined;
+    if (this.currentOperand === "") {
+      return;
+    }
+
+    if (this.currentOperand !== "") {
+      this.compute();
+    }
+    this.operation = operation;
+    this.previousOperand = this.currentOperand;
+    this.currentOperand = "";
   }
 
   compute() {
-    undefined;
+    let computation;
+    const prev = parseFloat(this.previousOperand);
+    const current = parseFloat(this.currentOperand);
+
+    if (isNaN(prev) || isNaN(current)) {
+      return;
+    }
+
+    switch (this.operation) {
+      case "+":
+          computation = prev + current;
+          break;
+      case "-":
+        computation = prev - current;
+        break;
+      case "*":
+        computation = prev * current;
+        break;
+      case "÷": 
+        if (prev != 0) {
+          computation = prev / current;
+        } else {
+          return;
+        }
+        break;
+      default:
+        return;
+    }
+
+    this.currentOperand = computation;
+    this.operation = undefined;
+    this.previousOperand = "";
   }
 
   updateDisplay() {
-    // console.log(`updateDisplay currentOperand before: ${this.currentOperand}`);
     this.currentOperandTextElement.innerText = this.currentOperand;
-    // console.log("Update display");
-    // console.log(`updateDisplay currentOperand after: ${this.currentOperand}`);
-    // console.log(`currentTextElement ${this.currentOperandTextElement.innerText}`);
-    // this.currentOperandTextElement.innerText = 287;
+    this.previousOperandTextEl.innerText = this.previousOperand;
   }
 }
 
-// let bruh = () => {
-//   currentOperandTextElement.innerText = "187";
-// }
-
 const numberButtons = document.querySelectorAll("[data-number]");
 const operationButtons = document.querySelectorAll("[data-operation]");
-const equalsButton = document.querySelectorAll("[data-equals]");
-const deleteButton = document.querySelectorAll("[data-delete]");
-const allClearButton = document.querySelectorAll("[data-all-clear]");
-const previousOperandTextElement = document.querySelectorAll("[data-previous-operand]")[0];
-const currentOperandTextElement = document.querySelectorAll("[data-current-operand]")[0];
+const equalsButton = document.querySelector("[data-equals]");
+const deleteButton = document.querySelector("[data-delete]");
+const allClearButton = document.querySelector("[data-all-clear]");
+const previousOperandTextElement = document.querySelector("[data-previous-operand]");
+const currentOperandTextElement = document.querySelector("[data-current-operand]");
 
-const calc = new Calculator(previousOperandTextElement, currentOperandTextElement);
+const calculator = new Calculator(previousOperandTextElement, currentOperandTextElement);
 
 numberButtons.forEach(button => {
   button.addEventListener("click", () => {
-    calc.appendNumber(button.innerText);
-    // bruh();
-    calc.updateDisplay();
-    // console.log(button.innerText);
-    // console.log(`currentOperandTextElement: ${currentOperandTextElement.innerText}`);
+    calculator.appendNumber(button.innerText);
+    calculator.updateDisplay();
   })
 });
 
-// console.log("bot: " + document.querySelectorAll("[data-delete]").innerText);
+operationButtons.forEach(button => {
+  button.addEventListener("click", () => {
+    calculator.chooseOperation(button.innerText);
+    calculator.updateDisplay();
+  })
+});
 
-// // document.querySelectorAll("[data-current-operand]")[1].forEach(item => {
-// //   console.log("Elements in Node: " + item);
-// // });
-
-// bruh();
-// currentOperandTextElement.innerText = "bruh";
+equalsButton.addEventListener("click", button => {
+  calculator.compute();
+  calculator.updateDisplay();
+})
