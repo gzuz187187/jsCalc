@@ -1,34 +1,40 @@
 class Calculator {
-  constructor(previousOperandTextElement, currentOperandTextElement) {
-    this.previousOperandTextElement = previousOperandTextElement;
-    this.currentOperandTextElement = currentOperandTextElement;
+  constructor(previousOperandTextEl, currentOperandTextEl) {
+    this.previousOperandTextElement = previousOperandTextEl;
+    this.currentOperandTextElement = currentOperandTextEl;
     this.clear();
+    console.log("Constructor works");
   }
 
   clear() {
     this.currentOperand = "";
-    this.previosOperand = "";
+    this.previousOperand = "";
     this.operation = undefined;
   }
 
   delete() {
-
+    undefined;
   }
 
   appendNumber(number) {
     this.currentOperand = number;
+    console.log(`appendNumber currentOperand: ${this.currentOperand}`);
   }
 
   chooseOperation(operation) {
-
+    undefined;
   }
 
   compute() {
-
+    undefined;
   }
 
   updateDisplay() {
-    this.currentOperandTextElement.innerHTML = this.currentOperand;
+    console.log(`updateDisplay currentOperand before: ${this.currentOperand}`);
+    this.currentOperandTextElement.innerText = this.currentOperand;
+    console.log("Update display");
+    console.log(`updateDisplay currentOperand after: ${this.currentOperand}`);
+    console.log(`currentTextElement ${this.currentOperandTextElement.innerText}`);
   }
 }
 
@@ -41,11 +47,13 @@ const allClearButton = document.querySelectorAll("[data-all-clear]");
 const previousOperandTextElement = document.querySelectorAll("[data-previous-operand]");
 const currentOperandTextElement = document.querySelectorAll("[data-current-operand]");
 
-const calculator = new Calculator(previousOperandTextElement, currentOperandTextElement);
+const calc = new Calculator(previousOperandTextElement, currentOperandTextElement);
 
 numberButtons.forEach(button => {
   button.addEventListener("click", () => {
-    calculator.appendNumber(button.innerText);
-    calculator.updateDisplay();
+    calc.appendNumber(button.innerText);
+    calc.updateDisplay();
+    console.log(button.innerText);
+    console.log(`currentOperandTextElement: ${currentOperandTextElement.innerText}`);
   })
 });
